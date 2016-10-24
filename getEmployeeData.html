@@ -1,0 +1,36 @@
+<html ng-app="app">
+<HEAD>
+	<meta charset="utf-8">
+	<script src= "http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js">
+	</script>
+	<script>
+	app=angular.module('app',[]);
+	app.controller('MyCtrl',function($scope,$http){
+		$http.get("get_oracle_data.jsp?sqlStr=select emp_code,emp_name," +
+			"to_char(date_of_birth,'dd/mm/rrrr') date_of_birth " +
+			"from employee_master where emp_grade='S'")
+		.success(function(response){
+			$scope.empData=response;
+			$scope.reverse=true;
+			})
+		.error(function(){
+		});
+	});
+	</script>
+</HEAD>
+<body ng-controller="MyCtrl">
+	Search : <input type="text" value="" ng-model="SearchField" name="SearchField" /><br>
+	<table border=1>
+	   <tr>
+	        <th><a href="" ng-click="sortField = 'EMP_CODE'; reverse=!reverse">Code</a></th>
+	        <th><a href="" ng-click="sortField = 'EMP_NAME'; reverse=!reverse">Name</a></th>
+	        <th><a href="" ng-click="sortField = 'DATE_OF_BIRTH'; reverse=!reverse">Date of Birth</a></th>
+	    </tr>		
+    <tr ng-repeat="data in empData  | filter:SearchField | orderBy:sortField:reverse">
+			<td>{{data.EMP_CODE}}</td>
+			<td>{{data.EMP_NAME}}</td>
+			<td>{{data.DATE_OF_BIRTH}}</td>
+		</tr>
+	</table>
+</body>
+</html>
